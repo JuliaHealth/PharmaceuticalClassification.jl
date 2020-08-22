@@ -4,9 +4,8 @@ CurrentModule = PharmaceuticalClassification
 
 # PharmaceuticalClassification
 
-```@index
-```
+[PharmaceuticalClassification](https://github.com/JuliaHealth/PharmaceuticalClassification.jl)
+implements mappings between different systems
+for classifying medications.
 
-```@autodocs
-Modules = [PharmaceuticalClassification]
-```
+Please see the [GitHub repository](https://github.com/JuliaHealth/PharmaceuticalClassification.jl).

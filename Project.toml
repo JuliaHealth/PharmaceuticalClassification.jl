@@ -1,13 +1,24 @@
 name = "PharmaceuticalClassification"
 uuid = "c42eed22-7bfe-405f-8797-8b984d5f7563"
-authors = ["Dilum Aluthge"]
+authors = ["Dilum Aluthge", "Brown Center for Biomedical Informatics", "JuliaHealth organization", "contributors"]
 version = "0.1.0-DEV"
 
+[deps]
+LightGraphs = "093fc24a-ae57-5d10-9952-331d41423f4d"
+MetaGraphs = "626554b9-1ddb-594c-aa3c-2596fe9399a5"
+ProgressMeter = "92933f4c-e287-5a05-a399-4b506db050ca"
+Serialization = "9e88b42a-f829-5b0c-bbe9-9e923198166b"
+
 [compat]
+LightGraphs = "1"
+MetaGraphs = "0.6"
+ProgressMeter = "1"
 julia = "1.4"
 
 [extras]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+Serialization = "9e88b42a-f829-5b0c-bbe9-9e923198166b"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Test"]
+test = ["Documenter", "Serialization", "Test"]
