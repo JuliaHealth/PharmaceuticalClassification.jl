@@ -1,0 +1,13 @@
+name = "PharmaceuticalClassification"
+uuid = "c42eed22-7bfe-405f-8797-8b984d5f7563"
+authors = ["Dilum Aluthge"]
+version = "0.1.0-DEV"
+
+[compat]
+julia = "1.4"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
