@@ -19,19 +19,18 @@ export parents
 export system_matches
 export vertices
 
+const all_neighbors = MetaGraphs.all_neighbors
 const inneighbors = MetaGraphs.inneighbors
-const neighbors = MetaGraphs.neighbors
 const outneighbors = MetaGraphs.outneighbors
 
 include("types.jl")
 
-include("available-systems.jl")
 include("build.jl")
 include("countlines.jl")
 include("edge.jl")
-include("filter.jl")
 include("iterate.jl")
 include("normalize.jl")
+include("system.jl")
 include("traversal.jl")
 include("vertex.jl")
 

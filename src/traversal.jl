@@ -39,13 +39,13 @@ end
     return inneighbors_classes
 end
 
-@inline function MetaGraphs.neighbors(graph::PharmGraph,
-                                      class::PharmClass;
-                                      normalization::Bool = true)
+@inline function MetaGraphs.all_neighbors(graph::PharmGraph,
+                                          class::PharmClass;
+                                          normalization::Bool = true)
     if normalization
-        return _neighbors(graph, normalize(class))
+        return _all_neighbors(graph, normalize(class))
     else
-        return _neighbors(graph, class)
+        return _all_neighbors(graph, class)
     end
 end
 

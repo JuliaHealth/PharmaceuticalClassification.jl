@@ -10,6 +10,25 @@ original_directory = pwd()
 
 @testset "PharmaceuticalClassification.jl" begin
     @testset "Unit tests" begin
+        @testset "iterate.jl" begin
+            @test Base.IteratorSize(PharmGraph) == Base.HasLength()
+            @test Base.IteratorEltype(PharmGraph) == Base.HasEltype()
+        end
+
+        @testset "system.jl" begin
+            @test system_matches(PharmClass("foo", "1"), "foo")
+            @test system_matches("foo")(PharmClass("foo", "1"))
+            @test !system_matches(PharmClass("foo", ""), "bar")
+            @test !system_matches("bar")(PharmClass("foo", ""))
+            @test system_matches(PharmClass("foo", "1"), r"foo")
+            @test system_matches(r"foo")(PharmClass("foo", "1"))
+            @test !system_matches(PharmClass("foo", "1"), r"bar")
+            @test !system_matches(r"bar")(PharmClass("foo", "1"))
+        end
+
+        @testset "types.jl" begin
+            @test Base.isless(PharmClass("bar", "1"), PharmClass("foo", "1"))
+        end
     end
 
     @testset "Integration tests" begin
@@ -36,15 +55,37 @@ original_directory = pwd()
                 for graph in [graph_built, graph_loaded_from_file]
                     @test graph isa PharmGraph
                     @test available_systems(graph; showprogress = false) == ["ATC5", "NDC", "RXCUI"]
-                    @test equivalent(graph, PharmClass("ATC5", "A01BC23")) == [PharmClass("ATC5", "A01BC23")]
+                    @test haskey(graph, PharmClass("ATC5", "A01BC23"); normalization = true)
+                    @test haskey(graph, PharmClass("ATC5", "A01BC23"); normalization = false)
+                    @test graph[PharmClass("ATC5", "A01BC23")] == PharmClass("ATC5", "A01BC23")
+                    @test getindex(graph, PharmClass("ATC5", "A01BC23"); normalization = true) == PharmClass("ATC5", "A01BC23")
+                    @test getindex(graph, PharmClass("ATC5", "A01BC23"); normalization = false) == PharmClass("ATC5", "A01BC23")
+                    @test equivalent(graph, PharmClass("ATC5", "A01BC23"); normalization = true) == [PharmClass("ATC5", "A01BC23")]
+                    @test equivalent(graph, PharmClass("ATC5", "A01BC23"); normalization = false) == [PharmClass("ATC5", "A01BC23")]
                     @test equivalent(graph, PharmClass("NDC", "12345678901")) == [PharmClass("NDC", "12345678901"), PharmClass("RXCUI", "1234567")]
                     @test equivalent(graph, PharmClass("RXCUI", "1234567")) == [PharmClass("NDC", "12345678901"), PharmClass("RXCUI", "1234567")]
-                    @test parents(graph, PharmClass("ATC5", "A01BC23")) == [PharmClass("ATC5", "A01BC23")]
+                    @test parents(graph, PharmClass("ATC5", "A01BC23"); normalization = true) == [PharmClass("ATC5", "A01BC23")]
+                    @test parents(graph, PharmClass("ATC5", "A01BC23"); normalization = false) == [PharmClass("ATC5", "A01BC23")]
                     @test parents(graph, PharmClass("NDC", "12345678901")) == [PharmClass("ATC5", "A01BC23"), PharmClass("NDC", "12345678901"), PharmClass("RXCUI", "1234567")]
                     @test parents(graph, PharmClass("RXCUI", "1234567")) == [PharmClass("ATC5", "A01BC23"), PharmClass("NDC", "12345678901"), PharmClass("RXCUI", "1234567")]
-                    @test children(graph, PharmClass("ATC5", "A01BC23")) == [PharmClass("ATC5", "A01BC23"), PharmClass("NDC", "12345678901"), PharmClass("RXCUI", "1234567")]
+                    @test children(graph, PharmClass("ATC5", "A01BC23"); normalization = true) == [PharmClass("ATC5", "A01BC23"), PharmClass("NDC", "12345678901"), PharmClass("RXCUI", "1234567")]
+                    @test children(graph, PharmClass("ATC5", "A01BC23"); normalization = false) == [PharmClass("ATC5", "A01BC23"), PharmClass("NDC", "12345678901"), PharmClass("RXCUI", "1234567")]
                     @test children(graph, PharmClass("NDC", "12345678901")) == [PharmClass("NDC", "12345678901"), PharmClass("RXCUI", "1234567")]
                     @test children(graph, PharmClass("RXCUI", "1234567")) == [PharmClass("NDC", "12345678901"), PharmClass("RXCUI", "1234567")]
+                    @test all_neighbors(graph, PharmClass("ATC5", "A01BC23"); normalization = true) == [PharmClass("ATC5", "A01BC23"), PharmClass("RXCUI", "1234567")]
+                    @test all_neighbors(graph, PharmClass("ATC5", "A01BC23"); normalization = false) == [PharmClass("ATC5", "A01BC23"), PharmClass("RXCUI", "1234567")]
+                    @test inneighbors(graph, PharmClass("ATC5", "A01BC23"); normalization = true) == PharmClass[PharmClass("ATC5", "A01BC23")]
+                    @test inneighbors(graph, PharmClass("ATC5", "A01BC23"); normalization = false) == PharmClass[PharmClass("ATC5", "A01BC23")]
+                    @test outneighbors(graph, PharmClass("ATC5", "A01BC23"); normalization = true) == PharmClass[PharmClass("ATC5", "A01BC23"), PharmClass("RXCUI", "1234567")]
+                    @test outneighbors(graph, PharmClass("ATC5", "A01BC23"); normalization = false) == PharmClass[PharmClass("ATC5", "A01BC23"), PharmClass("RXCUI", "1234567")]
+                    a = sort(unique(all_neighbors(graph, PharmClass("ATC5", "A01BC23"))))
+                    b = sort(unique(inneighbors(graph, PharmClass("ATC5", "A01BC23"))))
+                    c = sort(unique(outneighbors(graph, PharmClass("ATC5", "A01BC23"))))
+                    @test a == sort(unique(vcat(b, c)))
+                    @test !issubset(a, b)
+                    @test issubset(b, a)
+                    @test issubset(c, a)
+                    @test !issubset(c, b)
                     @test length(graph) == 3
                     count = 0
                     for node in graph
@@ -52,6 +93,7 @@ original_directory = pwd()
                     end
                     @test count == length(graph)
                     @test count == 3
+                    @test eltype(graph) == PharmClass
                 end
             end
         end
