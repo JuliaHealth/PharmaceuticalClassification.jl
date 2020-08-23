@@ -33,15 +33,4 @@ available_systems(graph)
 equivalent(graph, PharmClass("NDC", "1234-5678-90"))
 parents(graph, PharmClass("NDC", "1234-5678-90"))
 children(graph, PharmClass("NDC", "1234-5678-90"))
-
-atc_vertices = PharmClass[]
-p = ProgressMeter.Progress(length(graph), 1.0)
-for vertex in graph
-    ProgressMeter.next!(p)
-    if system_matches(vertex, r"ATC")
-        push!(atc_vertices, vertex)
-    end
-end
-unique!(atc_vertices)
-sort!(atc_vertices)
 ```
