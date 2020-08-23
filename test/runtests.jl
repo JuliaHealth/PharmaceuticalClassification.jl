@@ -28,6 +28,7 @@ original_directory = pwd()
 
         @testset "types.jl" begin
             @test Base.isless(PharmClass("bar", "1"), PharmClass("foo", "1"))
+            @test Base.isless(PharmClass("bar", "1"), PharmClass("bar", "2"))
         end
     end
 
