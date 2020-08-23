@@ -13,6 +13,7 @@ end
     lines = String[
         "1234567||||||||NDC||12345678901|||",
         "1234567|||||A01BC23|||ATC_LEVEL|ATC|5|||",
+        "1234567||||||||FAKE_ENTRY|||||",
     ]
     for line in lines
         println(io, line)

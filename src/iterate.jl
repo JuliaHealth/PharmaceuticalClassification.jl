@@ -25,7 +25,7 @@ end
     return Base.HasEltype()
 end
 
-@inline function Base.eltype(::Type{PharmGraph})
+@inline function Base.eltype(graph::PharmGraph)
     return PharmClass
 end
 

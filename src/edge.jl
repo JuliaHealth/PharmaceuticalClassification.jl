@@ -1,17 +1,3 @@
-@inline function add_edge!(graph::PharmGraph,
-                           pair::Pair{PharmClass,PharmClass};
-                           normalization::Bool = true)
-    if normalization
-        from_class = pair[1]::PharmClass
-        to_class = pair[2]::PharmClass
-        normalized_pair = normalize(from_class) => normalize(to_class)
-        _add_edge!(graph, normalized_pair)
-    else
-        _add_edge!(graph, pair)
-    end
-    return nothing
-end
-
 @inline function _add_edge!(graph::PharmGraph,
                             pair::Pair{PharmClass,PharmClass})
     g = graph.g

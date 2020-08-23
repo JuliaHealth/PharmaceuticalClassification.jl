@@ -17,11 +17,6 @@ end
     return build_graph!(graph::PharmGraph, config::Config)
 end
 
-@inline function build_graph!(graph::PharmGraph; kwargs...)
-    config = Config(; kwargs...)
-    return build_graph!(graph, config)
-end
-
 @inline function build_graph!(graph::PharmGraph, config::Config)
     total_numlines = 0
     rxnsat = config.rxnsat::String
