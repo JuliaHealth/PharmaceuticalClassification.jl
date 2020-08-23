@@ -1,5 +1,15 @@
 *.jl.*.cov
 *.jl.cov
 *.jl.mem
-Manifest.toml
+
 /docs/build/
+rrf/
+
+*.JLD2
+*.RRF
+*.jld2
+*.rrf
+*.serialized
+
+.DS_Store
+Manifest.toml
