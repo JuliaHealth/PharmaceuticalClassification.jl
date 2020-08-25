@@ -6,7 +6,7 @@
 [![Coverage](https://codecov.io/gh/JuliaHealth/PharmaceuticalClassification.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/JuliaHealth/PharmaceuticalClassification.jl)
 
 PharmaceuticalClassification
-implements mappings between different systems
-for classifying medications
+implements mappings between different systems for classifying medications.
 
-Please see the [documentation](https://JuliaHealth.github.io/PharmaceuticalClassification.jl/stable/).
+Please see the
+[documentation](https://JuliaHealth.github.io/PharmaceuticalClassification.jl/stable/).
