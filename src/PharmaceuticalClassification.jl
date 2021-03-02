@@ -25,6 +25,7 @@ const outneighbors = MetaGraphs.outneighbors
 
 include("types.jl")
 
+include("atc_fix.jl")
 include("build.jl")
 include("countlines.jl")
 include("edge.jl")

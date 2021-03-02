@@ -1,5 +1,3 @@
-import MetaGraphs
-
 @inline function Base.haskey(graph::PharmGraph,
                              class::PharmClass;
                              normalization::Bool = true)

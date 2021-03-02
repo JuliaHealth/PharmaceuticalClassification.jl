@@ -1,5 +1,3 @@
-import MetaGraphs
-
 struct PharmClass
     system::String
     value::String

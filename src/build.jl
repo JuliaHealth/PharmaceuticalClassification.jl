@@ -1,6 +1,3 @@
-import MetaGraphs
-import ProgressMeter
-
 @inline function new_graph(::Type{I}, ::Type{F}) where I where F
     g = MetaGraphs.MetaDiGraph{I, F}()
     MetaGraphs.set_indexing_prop!(g, :class)
@@ -25,12 +22,17 @@ end
     all_numlines = countlines_filename.(all_filenames)
     total_numlines = sum(all_numlines)
     showprogress::Bool = config.showprogress
-    wait_time::Float64 = showprogress ? Float64(1.0) : Float64(Inf)
-    p = ProgressMeter.Progress(total_numlines + 1, wait_time)
+    wait_time = showprogress ? Float64(1.0) : Float64(Inf)
+    p = ProgressMeter.Progress(total_numlines + 10, wait_time)
 
     open(config.rxnsat, "r") do io
         for line in eachline(io)
-            ProgressMeter.next!(p; showvalues = [(:Stage, "1 of 2 (\"RXNSAT.RRF\")")])
+            ProgressMeter.next!(p;
+                showvalues = [
+                    (:Stage, "1 of 3"),
+                    (:File, "RXNSAT.RRF"),
+                ],
+            )
             elements = split(line, "|")
             left_system = "RXCUI"
             left_value = elements[1]
@@ -63,9 +65,22 @@ end
         end
     end
 
+    ProgressMeter.next!(p;
+        showvalues = [
+            (:Stage, "2 of 3"),
+            (:Description, "Add edges for ATC hierarchy"),
+        ],
+    )
+    add_atc_hierarchy_edges!(graph)
+
     open(config.rxnrel, "r") do io
         for line in eachline(io)
-            ProgressMeter.next!(p; showvalues = [(:Stage, "2 of 2 (\"RXNREL.RRF\")")])
+            ProgressMeter.next!(p;
+                showvalues = [
+                    (:Stage, "3 of 3"),
+                    (:File, "RXNREL.RRF"),
+                ],
+            )
             elements = split(line, "|")
             if elements[11] == "RXNORM" && elements[3] == "CUI" && elements[7] == "CUI"
                 relationship = elements[8]

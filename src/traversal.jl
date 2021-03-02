@@ -1,5 +1,10 @@
-import LightGraphs
-import MetaGraphs
+@inline function _for_each_node(f::F, graph::PharmGraph) where {F}
+    for vertex_integer in MetaGraphs.vertices(graph.g)
+        class = _vertex_integer_to_class(graph, vertex_integer)::PharmClass
+        f(class)
+    end
+    return nothing
+end
 
 @inline function MetaGraphs.outneighbors(graph::PharmGraph,
                                          class::PharmClass;
