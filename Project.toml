@@ -1,7 +1,7 @@
 name = "PharmaceuticalClassification"
 uuid = "c42eed22-7bfe-405f-8797-8b984d5f7563"
 authors = ["Dilum Aluthge", "Brown Center for Biomedical Informatics", "JuliaHealth organization", "contributors"]
-version = "1.0.0-DEV"
+version = "1.0.0"
 
 [deps]
 LightGraphs = "093fc24a-ae57-5d10-9952-331d41423f4d"
