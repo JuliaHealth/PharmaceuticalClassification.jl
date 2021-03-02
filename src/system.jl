@@ -1,22 +1,18 @@
-import MetaGraphs
-import ProgressMeter
+@inline function available_systems(graph::PharmGraph)
+    all_systems_set = Set{String}()
 
-@inline function available_systems(graph::PharmGraph;
-                                   showprogress::Bool = true)
-    all_systems = Set{String}()
-    num_vertices = length(MetaGraphs.vertices(graph.g))
-    wait_time::Float64 = showprogress ? Float64(1.0) : Float64(Inf)
-    p = ProgressMeter.Progress(num_vertices, wait_time)
-    for vertex_integer in MetaGraphs.vertices(graph.g)
-        ProgressMeter.next!(p)
-        class = _vertex_integer_to_class(graph, vertex_integer)::PharmClass
+    function f(class)
         system = class.system::String
-        push!(all_systems, system)
+        push!(all_systems_set, system)
+        return nothing
     end
-    result = collect(all_systems)
-    unique!(result)
-    sort!(result)
-    return result
+
+    _for_each_node(f, graph)
+
+    all_systems_vector = collect(all_systems_set)
+    unique!(all_systems_vector)
+    sort!(all_systems_vector)
+    return all_systems_vector
 end
 
 @inline function system_matches(class::PharmClass, system::String)

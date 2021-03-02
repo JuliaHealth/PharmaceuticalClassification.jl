@@ -1,5 +1,3 @@
-import MetaGraphs
-
 @inline function Base.iterate(graph::PharmGraph)
     iteration = Base.iterate(MetaGraphs.vertices(graph.g))
     vertex_integer, next_state = iteration

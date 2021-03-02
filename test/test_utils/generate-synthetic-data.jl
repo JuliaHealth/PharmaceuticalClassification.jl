@@ -1,14 +1,3 @@
-@inline function in_temporary_directory(f::Function)::Nothing
-    original_directory = pwd()
-    temporary_directory = mktempdir(; cleanup = true)
-    atexit(() -> rm(temporary_directory; force = true, recursive = true))
-    cd(temporary_directory)
-    f()
-    cd(original_directory)
-    rm(temporary_directory; force = true, recursive = true)
-    return nothing
-end
-
 @inline function generate_synthetic_rxnrel(io::IO)::Nothing
     lines = String[
         "123:456||CUI||789||CUI|has_ingredient|||RXNORM||||||",
@@ -26,6 +15,10 @@ end
     lines = String[
         "1234567||||||||NDC||12345678901|||",
         "1234567|||||A01BC23|||ATC_LEVEL|ATC|5|||",
+        "1234567|||||A01BC|||ATC_LEVEL|ATC|4|||",
+        "1234567|||||A01B|||ATC_LEVEL|ATC|3|||",
+        "1234567|||||A01|||ATC_LEVEL|ATC|2|||",
+        "1234567|||||A|||ATC_LEVEL|ATC|1|||",
         "1234567||||||||FAKE_ENTRY|||||",
     ]
     for line in lines
