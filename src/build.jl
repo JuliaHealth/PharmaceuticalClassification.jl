@@ -18,18 +18,19 @@ end
 end
 
 @inline function build_graph!(graph::PharmGraph, config::Config)
-    total_numlines = 0
-    rxnsat = config.rxnsat::String
-    rxnsat_abspath = abspath(rxnsat)
-    rxnsat_numlines = countlines_filename(rxnsat_abspath)
-    total_numlines += rxnsat_numlines
+    all_filenames = [
+        config.rxnrel,
+        config.rxnsat,
+    ]
+    all_numlines = countlines_filename.(all_filenames)
+    total_numlines = sum(all_numlines)
     showprogress::Bool = config.showprogress
     wait_time::Float64 = showprogress ? Float64(1.0) : Float64(Inf)
-    p = ProgressMeter.Progress(total_numlines, wait_time)
-    g = graph.g
-    open(rxnsat_abspath, "r") do io
+    p = ProgressMeter.Progress(total_numlines + 1, wait_time)
+
+    open(config.rxnsat, "r") do io
         for line in eachline(io)
-            ProgressMeter.next!(p)
+            ProgressMeter.next!(p; showvalues = [(:Stage, "1 of 2 (\"RXNSAT.RRF\")")])
             elements = split(line, "|")
             left_system = "RXCUI"
             left_value = elements[1]
@@ -61,5 +62,30 @@ end
             end
         end
     end
+
+    open(config.rxnrel, "r") do io
+        for line in eachline(io)
+            ProgressMeter.next!(p; showvalues = [(:Stage, "2 of 2 (\"RXNREL.RRF\")")])
+            elements = split(line, "|")
+            if elements[11] == "RXNORM" && elements[3] == "CUI" && elements[7] == "CUI"
+                relationship = elements[8]
+                if relationship == "consists_of" || relationship == "has_ingredient"
+                    more_specific_rxcui = elements[5]
+                    element_1 = elements[1]
+                    if occursin(":", element_1)
+                        less_specific_rxcui = split(element_1, ':')[2]
+                    else
+                        less_specific_rxcui = element_1
+                    end
+                    more_specific_node = PharmClass("RXCUI", more_specific_rxcui)
+                    less_specific_node = PharmClass("RXCUI", less_specific_rxcui)
+                    PharmaceuticalClassification._add_edge!(graph, less_specific_node => more_specific_node)
+                end
+            end
+        end
+    end
+
+    ProgressMeter.finish!(p)
+
     return graph
 end

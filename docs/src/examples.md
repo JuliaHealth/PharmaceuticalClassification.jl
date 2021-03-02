@@ -9,8 +9,9 @@ CurrentModule = PharmaceuticalClassification
 using PharmaceuticalClassification
 using Serialization
 
+rxnrel = "/path/to/rrf/RXNREL.RRF"
 rxnsat = "/path/to/rrf/RXNSAT.RRF"
-graph = @time build_graph(; rxnsat = rxnsat) # usually takes approx 3-5 minutes
+graph = @time build_graph(; rxnrel, rxnsat) # usually takes approx 3-5 minutes
 @time Serialization.serialize("my_graph_filename.serialized", graph) # usually takes approx 3-4 minutes
 ```
 
