@@ -21,6 +21,7 @@ struct PharmGraph{I, F}
 end
 
 Base.@kwdef struct Config
+    rxnrel::String
     rxnsat::String
     showprogress::Bool = true
 end

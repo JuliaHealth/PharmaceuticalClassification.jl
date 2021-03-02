@@ -9,6 +9,19 @@
     return nothing
 end
 
+@inline function generate_synthetic_rxnrel(io::IO)::Nothing
+    lines = String[
+        "123:456||CUI||789||CUI|has_ingredient|||RXNORM||||||",
+        "456||CUI||789||CUI|has_ingredient|||RXNORM||||||",
+        "123:456||CUI||789||CUI|consists_of|||RXNORM||||||",
+        "456||CUI||789||CUI|consists_of|||RXNORM||||||",
+    ]
+    for line in lines
+        println(io, line)
+    end
+    return nothing
+end
+
 @inline function generate_synthetic_rxnsat(io::IO)::Nothing
     lines = String[
         "1234567||||||||NDC||12345678901|||",
